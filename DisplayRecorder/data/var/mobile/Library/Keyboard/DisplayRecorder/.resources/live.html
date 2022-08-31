@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>Display Recorder: Live</title>
+<link rel="shortcut icon" href="/.resources/favicon.ico"/>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0"/>
+<style>
+* { user-select:none!important;-webkit-user-select:none!important;-moz-user-select:none; }
+</style>
+<script>
+var dragging = false;
+function posOf(o) {
+	var l = t = 0;
+	if (o.offsetParent) {
+		do {
+			l+=o.offsetLeft;
+			t+=o.offsetTop;
+		} while(o=o.offsetParent);
+	}
+	return [l,t];
+}
+function eventPos(e) {
+	e=e||window.event;
+	if (typeof(e.offsetX)=='undefined') {
+		var p = posOf(e.target);
+		return [e.pageX-p[0],e.pageY-p[1]];
+	}
+	return [e.offsetX,e.offsetY];
+}
+function touchquery(e) {
+	var p = eventPos(e);
+	return '?x='+p[0]+'&y='+p[1];
+}
+var shifted = false;
+function keyquery(e) {
+	return '?code='+(shifted ? e.keyCode : String.fromCharCode(e.keyCode).toLowerCase().charCodeAt(0));
+}
+if (typeof XMLHttpRequest == "undefined")
+  XMLHttpRequest = function () {
+    try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); }
+      catch (e) {}
+    try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); }
+      catch (e) {}
+    try { return new ActiveXObject("Msxml2.XMLHTTP"); }
+      catch (e) {}
+    throw new Error("This browser does not support XMLHttpRequest.");
+  };
+function sendEvent(u) {
+	x = new XMLHttpRequest();
+	x.open("GET",u,false);
+	x.send("");
+}
+</script>
+</head>
+<body
+	onkeydown="if (event.keyCode == 16) shifted = true; else sendEvent('/send/keypress'+keyquery(event)); event.preventDefault()"
+	onkeyup="if (event.keyCode == 16) shifted = false; else sendEvent('/send/keyrelease'+keyquery(event));event.preventDefault()"
+>
+<div style="background:white url(iPhone.png) no-repeat center top;width:383px;height:729px;margin:0 auto 0 auto">
+<a style="display:block;width:320.0f;height:131px;text-indent:-10000px" target="hidden" onclick="sendEvent('/send/lock')">Lock</a>
+<img src="/video" width="320" height="480" border="0" style="margin:0 0 -480px 33px;position:relative;z-index:1"/>
+<div id="display" style="width:320px;height:480px;margin:0 auto 0 auto;cursor:default;position:relative;z-index:2"
+	onmousedown="sendEvent('/send/press'+touchquery(event));dragging=true;"
+	onmousemove="if (dragging) sendEvent('/send/press'+touchquery(event));"
+	onmouseup="sendEvent('/send/release'+touchquery(event));dragging=false;"
+	></div>
+<a style="display:block;width:320.0f;height:118px;text-indent:-10000px" target="hidden" onclick="sendEvent('/send/home')">Hidden</a>
+</div>
+</body>
+</html>

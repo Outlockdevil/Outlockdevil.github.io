@@ -1,0 +1,14 @@
+Package: com.outlockdevil.displayrecorder
+Version: 0.0.1
+Architecture: iphoneos-arm
+Maintainer: outlock <outlockdevil@gmail.com>
+Depends: fabiusutils, sed
+Filename: /DisplayRecorder.deb
+Size:651300
+MD5sum:eec7449e81273c806836793b972f10a0
+SHA1:d16d9b8f370a38d517ecefbea838bdebf8df85f4
+SHA256:ad502273aa1e506267f3db5d2ef28bb2edc14faf3e12b2096c74d3210d8e875a
+Section: Tweaks
+Description: Allow to record you on old idevices
+Author:OutLock <outlockdevil@gmail.com>
+Name: DisplayRecorder
